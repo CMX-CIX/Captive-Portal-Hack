@@ -71,13 +71,11 @@ main() {
       network="$networkfromlist/$netmask"
     fi
 
-  # Scan selected network for active hosts.
   printf "%b\n" "Looking for active hosts in $network. Please wait."
   nmap -n -sn -PR -PS -PA -PU -T5 --exclude "$localip","$gateway" "$network" \
   | awk '/for/ {print $5} ; /Address/ {print $3}' \
   | sed '$!N;s/\n/ - /' > "$tmp"/hostsalive.$$.txt
 
-  # Set founded IP and MAC for wireless interface.
     while read -r hostline; do
       newipset="$(printf "%s\n" "$hostline" | awk '{print $1}')"
       newmacset="$(printf "%s\n" "$hostline" \
